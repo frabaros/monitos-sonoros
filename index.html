@@ -125,7 +125,7 @@ body.vapor .sw[aria-pressed="true"] i{box-shadow:inset 0 0 0 2.5px var(--c),0 0 
   <div class="grp">
     <button class="ib play" id="play" aria-label="Reproducir" title="Play (Espacio)"><svg viewBox="0 0 24 24" id="playIcon"><path d="M7 4l13 8-13 8z"/></svg></button>
     <button class="ib sm" id="bpmDown" aria-label="Bajar tempo" title="Tempo (↓)">−</button>
-    <span class="num" id="bpm" aria-label="Tempo">90</span>
+    <span class="num" id="bpm" aria-label="Tempo en pulsos por minuto" style="min-width:58px">90 bpm</span>
     <button class="ib sm" id="bpmUp" aria-label="Subir tempo" title="Tempo (↑)">+</button>
   </div>
 
@@ -148,7 +148,7 @@ body.vapor .sw[aria-pressed="true"] i{box-shadow:inset 0 0 0 2.5px var(--c),0 0 
     <button class="ib sm" id="octDown" aria-label="Bajar octava" title="Octava ([)">−</button>
     <span class="num" id="oct" style="min-width:40px">oct 3</span>
     <button class="ib sm" id="octUp" aria-label="Subir octava" title="Octava (])">+</button>
-    <button class="ib txt" id="grid" aria-label="Grilla de batería" title="Grilla (G)">32</button>
+    <button class="ib txt" id="grid" aria-label="Pasos de la grilla de batería" title="Pasos de la grilla de batería (G)">32 pasos</button>
     <button class="ib" id="helpBtn" aria-label="Atajos de teclado" aria-pressed="false" title="Atajos (?)"><svg viewBox="0 0 24 24"><path d="M9.5 9a2.5 2.5 0 1 1 3.6 2.25c-.7.35-1.1.9-1.1 1.6V14"/><circle cx="12" cy="17.5" r=".9" fill="currentColor"/></svg></button>
     <button class="ib" id="reset" aria-label="Volver al smile" title="Volver al smile (R)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.2 14c.9 1.7 2.1 2.5 3.8 2.5s2.9-.8 3.8-2.5"/><circle cx="9.3" cy="9.6" r=".9" fill="currentColor"/><circle cx="14.7" cy="9.6" r=".9" fill="currentColor"/></svg></button>
   </div>
@@ -748,11 +748,11 @@ function setInstr(i, show){
 }
 function setTool(t){ S.tool = t; sheet.dataset.tool = t; $('erase').setAttribute('aria-pressed', t === 'erase'); }
 function setBpm(v, show){
-  const old = loopLen(); S.bpm = clamp(Math.round(v), 40, 220); $('bpm').textContent = S.bpm;
+  const old = loopLen(); S.bpm = clamp(Math.round(v), 40, 220); $('bpm').textContent = S.bpm + ' bpm';
   if (S.playing && ctx){ t0 = cursor - ((cursor - t0)/old) * loopLen(); }
   if (show) hud(S.bpm + ' bpm'); save();
 }
-function setSteps(n, show){ S.steps = n; $('grid').textContent = n; compile(); if (show) hud('grilla ' + n); save(); }
+function setSteps(n, show){ S.steps = n; $('grid').textContent = n + ' pasos'; compile(); if (show) hud('grilla ' + n); save(); }
 function setRoot(r, show){ S.root = (r+12)%12; $('root').value = S.root; dirty = true; if (show) hud(NOTES[S.root] + ' · ' + SCALES[S.scale].name); save(); }
 function setScale(k, show){ S.scale = k; $('scale').value = k; compile(); if (show) hud(NOTES[S.root] + ' · ' + SCALES[k].name); save(); }
 function setOct(o, show){ S.oct = clamp(o, 1, 5); $('oct').textContent = 'oct ' + S.oct; dirty = true; if (show) hud('octava ' + S.oct); save(); }
@@ -817,7 +817,7 @@ const mq = window.matchMedia('(prefers-color-scheme: dark)');
 new MutationObserver(readTokens).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
 
 if (!load()){ const m = faceSketch(); S.strokes = m.s; S.hits = m.h; }
-$('scale').value = S.scale; $('root').value = S.root; $('bpm').textContent = S.bpm; $('grid').textContent = S.steps; $('oct').textContent = 'oct ' + S.oct;
+$('scale').value = S.scale; $('root').value = S.root; $('bpm').textContent = S.bpm + ' bpm'; $('grid').textContent = S.steps + ' pasos'; $('oct').textContent = 'oct ' + S.oct;
 setInstr(S.instr); setTool('pen'); setMode(S.mode);
 (() => {
   let seen = false; try { seen = localStorage.getItem(SEEN) === '1'; } catch(e){}
