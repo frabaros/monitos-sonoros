@@ -54,6 +54,32 @@ button,select{font:inherit;color:inherit}
 
 .bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 14px;min-height:40px}
 .grp{display:flex;align-items:center;gap:2px}
+.right{display:flex;align-items:center;gap:2px}
+.oct-wrap{display:flex;align-items:center}
+.ib.only-m{display:none}
+button{touch-action:manipulation}
+@media (max-width:720px){
+  .bar{position:relative;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"t r" "c c";gap:6px 4px}
+  .bar>.grp:first-child{grid-area:t}
+  .bar>.grp.center{grid-area:c;justify-self:center}
+  .right{grid-area:r;justify-self:end}
+  .ib{width:29px}
+  .ib.sm{width:20px}
+  .right,.right .grp{gap:0}
+  #bpm{min-width:50px!important}
+  .sw{width:28px;height:30px}
+  .palette{gap:2px}
+  .grp.center{gap:8px!important}
+  .ib.only-m{display:grid}
+  #helpBtn{display:none}
+  .sep{display:none}
+  .settings{position:absolute;right:0;bottom:calc(100% + 8px);z-index:30;flex-wrap:wrap;justify-content:center;gap:4px 10px;
+    max-width:100%;padding:8px 10px;border-radius:12px;background:var(--paper);
+    box-shadow:0 0 0 1px var(--grid-strong),0 14px 30px -16px var(--shadow)}
+  .settings:not(.open){display:none}
+  .settings .sel{opacity:1;color:var(--ink);font-size:13px}
+  .settings .num{color:var(--ink)}
+}
 .ib{width:34px;height:34px;display:grid;place-items:center;border:0;border-radius:8px;background:none;color:var(--muted);cursor:pointer;opacity:.75;transition:opacity .15s,background .15s,color .15s}
 .ib:hover,.ib:focus-visible{opacity:1;background:var(--hover);color:var(--ink)}
 .ib[aria-pressed="true"]{opacity:1;color:var(--ink);background:var(--hover)}
@@ -129,7 +155,7 @@ body.vapor .sw[aria-pressed="true"] i{box-shadow:inset 0 0 0 2.5px var(--c),0 0 
     <button class="ib sm" id="bpmUp" aria-label="Subir tempo" title="Tempo (↑)">+</button>
   </div>
 
-  <div class="grp" style="gap:12px">
+  <div class="grp center" style="gap:12px">
     <div class="palette" id="palette" role="group" aria-label="Instrumento"></div>
     <div class="mode" role="group" aria-label="Tipo de trazo">
       <button class="ib" id="ink" aria-pressed="true" aria-label="Tinta: el trazo se queda" title="Tinta · se queda (V)"><svg viewBox="0 0 24 24"><path d="M3 14c3-6 6-6 9 0s6 6 9 0"/></svg></button>
@@ -137,20 +163,25 @@ body.vapor .sw[aria-pressed="true"] i{box-shadow:inset 0 0 0 2.5px var(--c),0 0 
     </div>
   </div>
 
-  <div class="grp">
-    <button class="ib" id="erase" aria-pressed="false" aria-label="Borrador" title="Borrador (E)"><svg viewBox="0 0 24 24"><path d="M20 20H9l-5-5a1.5 1.5 0 0 1 0-2l9-9a1.5 1.5 0 0 1 2 0l5 5a1.5 1.5 0 0 1 0 2l-9 9"/><path d="M7.5 10.5l6 6"/></svg></button>
-    <button class="ib" id="undo" aria-label="Deshacer" title="Deshacer (Z)"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
-    <button class="ib" id="clear" aria-label="Limpiar" title="Limpiar (⌫)"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
-    <button class="ib fresh" id="dice" aria-label="Dibujo al azar" title="Dado (D)"><svg viewBox="0 0 24 24"><defs><linearGradient id="dg" gradientUnits="userSpaceOnUse" x1="0" y1="4" x2="24" y2="20" spreadMethod="repeat"><stop offset="0" style="stop-color:var(--i6)"/><stop offset=".34" style="stop-color:var(--i4)"/><stop offset=".67" style="stop-color:var(--i7)"/><stop offset="1" style="stop-color:var(--i6)"/><animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="24 16" dur="2.2s" repeatCount="indefinite"/></linearGradient></defs><rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="9" cy="9" r=".9" fill="currentColor"/><circle cx="15" cy="15" r=".9" fill="currentColor"/><circle cx="15" cy="9" r=".9" fill="currentColor"/><circle cx="9" cy="15" r=".9" fill="currentColor"/></svg></button>
-    <span class="sep"></span>
-    <select class="sel" id="root" aria-label="Tónica" title="Tónica (← →)"></select>
-    <select class="sel" id="scale" aria-label="Escala" title="Escala (S)"></select>
-    <button class="ib sm" id="octDown" aria-label="Bajar octava" title="Octava ([)">−</button>
-    <span class="num" id="oct" style="min-width:40px">oct 3</span>
-    <button class="ib sm" id="octUp" aria-label="Subir octava" title="Octava (])">+</button>
-    <button class="ib txt" id="grid" aria-label="Pasos de la grilla de batería" title="Pasos de la grilla de batería (G)">32 pasos</button>
-    <button class="ib" id="helpBtn" aria-label="Atajos de teclado" aria-pressed="false" title="Atajos (?)"><svg viewBox="0 0 24 24"><path d="M9.5 9a2.5 2.5 0 1 1 3.6 2.25c-.7.35-1.1.9-1.1 1.6V14"/><circle cx="12" cy="17.5" r=".9" fill="currentColor"/></svg></button>
-    <button class="ib" id="reset" aria-label="Volver al smile" title="Volver al smile (R)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.2 14c.9 1.7 2.1 2.5 3.8 2.5s2.9-.8 3.8-2.5"/><circle cx="9.3" cy="9.6" r=".9" fill="currentColor"/><circle cx="14.7" cy="9.6" r=".9" fill="currentColor"/></svg></button>
+  <div class="right">
+    <div class="grp tools">
+      <button class="ib" id="erase" aria-pressed="false" aria-label="Borrador" title="Borrador (E)"><svg viewBox="0 0 24 24"><path d="M20 20H9l-5-5a1.5 1.5 0 0 1 0-2l9-9a1.5 1.5 0 0 1 2 0l5 5a1.5 1.5 0 0 1 0 2l-9 9"/><path d="M7.5 10.5l6 6"/></svg></button>
+      <button class="ib" id="undo" aria-label="Deshacer" title="Deshacer (Z)"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+      <button class="ib" id="clear" aria-label="Limpiar" title="Limpiar (⌫)"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+      <button class="ib fresh" id="dice" aria-label="Dibujo al azar" title="Dado (D)"><svg viewBox="0 0 24 24"><defs><linearGradient id="dg" gradientUnits="userSpaceOnUse" x1="0" y1="4" x2="24" y2="20" spreadMethod="repeat"><stop offset="0" style="stop-color:var(--i6)"/><stop offset=".34" style="stop-color:var(--i4)"/><stop offset=".67" style="stop-color:var(--i7)"/><stop offset="1" style="stop-color:var(--i6)"/><animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="24 16" dur="2.2s" repeatCount="indefinite"/></linearGradient></defs><rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="9" cy="9" r=".9" fill="currentColor"/><circle cx="15" cy="15" r=".9" fill="currentColor"/><circle cx="15" cy="9" r=".9" fill="currentColor"/><circle cx="9" cy="15" r=".9" fill="currentColor"/></svg></button>
+    </div>
+    <div class="grp settings" id="settings" role="group" aria-label="Ajustes de sonido">
+      <span class="sep"></span>
+      <select class="sel" id="root" aria-label="Tónica" title="Tónica (← →)"></select>
+      <select class="sel" id="scale" aria-label="Escala" title="Escala (S)"></select>
+      <span class="oct-wrap"><button class="ib sm" id="octDown" aria-label="Bajar octava" title="Octava ([)">−</button><span class="num" id="oct" style="min-width:40px">oct 3</span><button class="ib sm" id="octUp" aria-label="Subir octava" title="Octava (])">+</button></span>
+      <button class="ib txt" id="grid" aria-label="Pasos de la grilla de batería" title="Pasos de la grilla de batería (G)">32 pasos</button>
+    </div>
+    <div class="grp meta">
+      <button class="ib" id="reset" aria-label="Volver al smile" title="Volver al smile (R)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.2 14c.9 1.7 2.1 2.5 3.8 2.5s2.9-.8 3.8-2.5"/><circle cx="9.3" cy="9.6" r=".9" fill="currentColor"/><circle cx="14.7" cy="9.6" r=".9" fill="currentColor"/></svg></button>
+      <button class="ib only-m" id="setBtn" aria-label="Ajustes de sonido" aria-pressed="false" aria-expanded="false" aria-controls="settings"><svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
+      <button class="ib" id="helpBtn" aria-label="Atajos de teclado" aria-pressed="false" title="Atajos (?)"><svg viewBox="0 0 24 24"><path d="M9.5 9a2.5 2.5 0 1 1 3.6 2.25c-.7.35-1.1.9-1.1 1.6V14"/><circle cx="12" cy="17.5" r=".9" fill="currentColor"/></svg></button>
+    </div>
   </div>
 </nav>
 
@@ -783,6 +814,17 @@ document.addEventListener('pointerdown', e => {
   if ($('help').hidden) return;
   if (e.target.closest('#help') || e.target.closest('#helpBtn')) return;
   toggleHelp(false);
+}, true);
+function toggleSettings(force){
+  const el = $('settings'), on = force ?? !el.classList.contains('open');
+  el.classList.toggle('open', on);
+  $('setBtn').setAttribute('aria-pressed', on); $('setBtn').setAttribute('aria-expanded', on);
+}
+$('setBtn').addEventListener('click', () => toggleSettings());
+document.addEventListener('pointerdown', e => {
+  if (!$('settings').classList.contains('open')) return;
+  if (e.target.closest('#settings') || e.target.closest('#setBtn')) return;
+  toggleSettings(false);
 }, true);
 
 document.addEventListener('keydown', e => {
